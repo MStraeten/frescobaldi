@@ -53,9 +53,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ["Windows"]
-        # macOS disabled until we have a new certificate
-        #target: ["Windows", "macOS", "macOS-Intel"]
+        target: ["Windows", "macOS", "macOS-Intel"]
         include:
           - target: "Windows"
             platform: "windows"
@@ -63,19 +61,19 @@ jobs:
             runs-on: "windows-latest"
             filename: dist/*.msi
 
-          # - target: "macOS"
-          #   platform: "macOS"
-          #   output-format: "app"
-          #   runs-on: "macos-latest"
-          #   briefcase-package-args: '--identity "$CERTIFICATE_ID"'
-          #   filename: dist/*.dmg
+          - target: "macOS"
+            platform: "macOS"
+            output-format: "app"
+            runs-on: "macos-latest"
+            briefcase-package-args: '--identity "$CERTIFICATE_ID"'
+            filename: dist/*.dmg
 
-          # - target: "macOS-Intel"
-          #   platform: "macOS"
-          #   output-format: "app"
-          #   runs-on: "macos-latest"
-          #   briefcase-package-args: '--identity "$CERTIFICATE_ID"'
-          #   filename: dist/*.dmg
+          - target: "macOS-Intel"
+            platform: "macOS"
+            output-format: "app"
+            runs-on: "macos-latest"
+            briefcase-package-args: '--identity "$CERTIFICATE_ID"'
+            filename: dist/*.dmg
 
     steps:
       - name: Checkout
