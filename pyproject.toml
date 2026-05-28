@@ -49,7 +49,7 @@ project_name = "frescobaldi"
 bundle = "org.frescobaldi"
 # Briefcase does not support dynamic version yet.
 # https://github.com/beeware/briefcase/issues/474
-version = "4.0.7.dev0"
+version = "4.0.7"
 
 [tool.briefcase.app.frescobaldi]
 formal_name = "Frescobaldi"
@@ -59,7 +59,7 @@ sources = ['frescobaldi']
 icon = "frescobaldi/icons/org.frescobaldi.Frescobaldi"
 requires = [
     "python-ly==0.9.10",
-    "qpageview==1.0.4",
+    "qpageview==1.0.5",
     "pygame-ce==2.5.7"
 ]
 

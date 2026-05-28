@@ -24,7 +24,7 @@ also manually change the version in `pyproject.toml`.
 Before creating a new release on GitHub make sure to review this
 **release checklist**:
 
-- Run `hatch version patch` or `hatch version minor`.
+- Run `hatch version x.y.z`.
 - Manually update the version in the tool.briefcase section of `pyproject.toml`.
 - Check that project.dependencies and tool.briefcase.requires versions
   in `pyproject.toml` are correct and up-to-date. Use `pip index versions PACKAGE`
