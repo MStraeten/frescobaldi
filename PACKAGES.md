@@ -26,8 +26,8 @@ Before creating a new release on GitHub make sure to review this
 
 - Run `hatch version x.y.z`.
 - Manually update the version in the tool.briefcase section of `pyproject.toml`.
-- Check that project.dependencies and tool.briefcase.requires versions
-  in `pyproject.toml` are correct and up-to-date. Use `pip index versions PACKAGE`
+- Check that project.dependencies and tool.briefcase.app.frescobaldi.requires versions
+  in `pyproject.toml` are correct and up-to-date. Run `just check-updates`
   to quickly see the latest available version.
 - Make sure that the `CHANGELOG.md` has a complete list of features
   and bug fixes for the new release. Set the release date and add
