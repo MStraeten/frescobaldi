@@ -9,6 +9,16 @@ Click on the version to see the complete list of commits in a release.
 
 ## [unreleased]
 
+## [4.0.7] - 2026-05-29
+
+### Fixed
+
+- macOS packages are available again. Many thanks to @walkymatt for providing the new Apple certificate!
+- macOS: PyQt version downgraded to 6.9 to avoid the crash discussed in #2160 (#2190)
+- Reduce link cache memory usage (#2202)
+- Some performance optimizations have been added in version 1.0.5 of qpageview, which is bundled in the Windows and macOS packages.
+
+
 ## [4.0.6] - 2026-04-28
 
 ### Fixed
@@ -1730,7 +1740,8 @@ Frescobaldi application itself has the PO files in i18n/frescobaldi, see
 
 * Initial release.
 
-[unreleased]: https://github.com/frescobaldi/frescobaldi/compare/v4.0.6...master
+[unreleased]: https://github.com/frescobaldi/frescobaldi/compare/v4.0.7...master
+[4.0.7]: https://github.com/frescobaldi/frescobaldi/compare/v4.0.6...v4.0.7
 [4.0.6]: https://github.com/frescobaldi/frescobaldi/compare/v4.0.5...v4.0.6
 [4.0.5]: https://github.com/frescobaldi/frescobaldi/compare/v4.0.4...v4.0.5
 [4.0.4]: https://github.com/frescobaldi/frescobaldi/compare/v4.0.3...v4.0.4
