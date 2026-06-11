@@ -29,7 +29,6 @@ from PyQt6.QtCore import QAbstractItemModel, QModelIndex, Qt
 from PyQt6.QtGui import QKeySequence
 
 import app
-import actioncollection
 
 from . import snippets, tool
 
