@@ -40,6 +40,7 @@ import userguide
 import widgets.dialog
 
 from . import model
+from . import tool
 from . import snippets
 from . import builtin
 
@@ -204,7 +205,7 @@ def load(filename, widget):
     qutil.saveDialogSize(dlg, "snippettool/import/size", QSize(400, 300))
     if not dlg.exec() or not items:
         return
-    ac = model.collection()
+    ac = tool.collection()
     m = model.model()
     with qutil.busyCursor():
         for i in items:
