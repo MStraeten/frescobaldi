@@ -1,53 +1,4 @@
-name: Frescobaldi release
-# This action is intended to be run on releases, but the
-# manual trigger (workflow_dispatch) might be useful
-# to test the packages before a release.
-on:
-  workflow_dispatch:
-  release:
-    types: [published]
-
-env:
-  FORCE_COLOR: "1"
-
-defaults:
-  run:
-    shell: bash
-
-jobs:
-  tarball:
-    # Tarball including .mo files plus the built .desktop and .metainfo.xml files
-    name: Tarball for Linux packagers
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-      - name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.13"
-      - name: Install dependencies
-        run: |
-          sudo apt update && sudo apt install -y appstream desktop-file-utils gettext
-          python -m pip install --upgrade pip build wheel tox
-      - name: Build tarball
-        id: build_tarball
-        run: |
-          tox -e mo-generate
-          tox -e linux-generate
-          tox -e linux-validate
-          python -m build
-          echo "filename=$(ls dist/*.tar.gz)" >> "$GITHUB_OUTPUT"
-      - name: Tarball upload
-        if: github.event.release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file_glob: true
-          file: ${{ steps.build_tarball.outputs.filename }}
-          tag: ${{ github.ref }}
-
-  packages:
+packages:
     name: Packages
     runs-on: ${{ matrix.runs-on }}
     strategy:
@@ -65,50 +16,17 @@ jobs:
             platform: "macOS"
             output-format: "app"
             runs-on: "macos-latest"
-            briefcase-package-args: '--identity "$CERTIFICATE_ID"'
             filename: dist/*.dmg
 
           - target: "macOS-Intel"
             platform: "macOS"
             output-format: "app"
             runs-on: "macos-latest"
-            briefcase-package-args: '--identity "$CERTIFICATE_ID"'
             filename: dist/*.dmg
 
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-
-      - name: Import signing certificate on macOS
-        if: ${{ (matrix.target == 'macOS') || (matrix.target == 'macOS-Intel') }}
-        env:
-          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
-          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-          CERTIFICATE_ID: ${{ secrets.CERTIFICATE_ID }}
-          TEAM_ID: ${{ secrets.TEAM_ID }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          BRIEFCASE_PASSWORD: ${{ secrets.BRIEFCASE_PASSWORD }}
-        run: |
-          # create variables
-          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-
-          # import certificate from secrets
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
-
-          # create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-
-          # import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
-
-          # store app-specific password for notarization
-          xcrun notarytool store-credentials "briefcase-macOS-$TEAM_ID" --apple-id "$APPLE_ID" --team-id $TEAM_ID --password $BRIEFCASE_PASSWORD
 
       - name: Setup Python
         uses: actions/setup-python@v6
@@ -148,8 +66,6 @@ jobs:
             ${{ matrix.briefcase-build-args }}
 
       - name: Package Frescobaldi
-        env:
-          CERTIFICATE_ID: ${{ secrets.CERTIFICATE_ID }}
         run: |
           ${{ matrix.briefcase-package-prefix }} \
           briefcase package \
@@ -191,4 +107,3 @@ jobs:
           file_glob: true
           file: ${{ matrix.filename }}
           tag: ${{ github.ref }}
-
